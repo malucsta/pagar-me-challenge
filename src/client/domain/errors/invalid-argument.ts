@@ -1,9 +1,9 @@
 import { ClientError, DomainError } from './errors-types';
 
-export class InvalidIdError extends Error implements DomainError {
+export class InvalidArgumentError extends Error implements DomainError {
   status: string;
-  constructor() {
-    super('Invalid Id Format');
+  constructor(message: string) {
+    super(message);
     this.status = ClientError.InvalidArguments;
   }
 }

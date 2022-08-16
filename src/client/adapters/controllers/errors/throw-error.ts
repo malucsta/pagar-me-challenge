@@ -4,7 +4,7 @@ interface ClientError {
   status: string;
 }
 
-export function throwClientError(response: any, error: ClientError) {
+export function throwError(response: any, error: ClientError) {
   return response
     .status(Number(error.status))
     .send({ message: error.message, data: {} });
