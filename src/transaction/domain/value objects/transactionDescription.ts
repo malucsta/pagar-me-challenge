@@ -2,11 +2,15 @@ import { Either, left, right } from '../../../shared/either';
 import { InvalidArgumentError } from '../errors/invalid-argument';
 
 export class Description {
-  public readonly description: string;
+  private readonly description: string;
 
   private constructor(description: string) {
     this.description = description;
     Object.freeze(this);
+  }
+
+  get value() {
+    return this.description;
   }
 
   private isValidLength(description: string): boolean {

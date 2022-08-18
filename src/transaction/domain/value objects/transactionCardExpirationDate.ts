@@ -2,11 +2,15 @@ import { Either, left, right } from '../../../shared/either';
 import { InvalidArgumentError } from '../errors/invalid-argument';
 
 export class CardExpirationDate {
-  public readonly expirationDate: string;
+  private readonly expirationDate: string;
 
   private constructor(expirationDate: string) {
     this.expirationDate = expirationDate;
     Object.freeze(this);
+  }
+
+  get value() {
+    return this.expirationDate;
   }
 
   private isValidYear(year: number): boolean {

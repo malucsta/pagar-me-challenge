@@ -84,13 +84,13 @@ export class TransactionService {
 
     const createdTransaction = await this.repository.save({
       id: transaction.id.value,
-      description: transaction.description.description,
-      paymentMethod: transaction.paymentMethod.paymentMethod,
-      value: transaction.value.value,
-      cardNumber: transaction.cardNumber.cardNumber,
-      cardOwner: transaction.cardOwner.cardOwner,
-      cardExpirationDate: transaction.cardExpirationDate.expirationDate,
-      cardCvv: transaction.cardCvv.cardCvv,
+      description: transaction.description.value,
+      paymentMethod: transaction.paymentMethod.value,
+      value: transaction.value.getValue,
+      cardNumber: transaction.cardNumber.value,
+      cardOwner: transaction.cardOwner.value,
+      cardExpirationDate: transaction.cardExpirationDate.value,
+      cardCvv: transaction.cardCvv.value,
       client: client,
     });
 

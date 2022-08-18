@@ -2,11 +2,15 @@ import { Either, left, right } from '../../../shared/either';
 import { InvalidArgumentError } from '../errors/invalid-argument';
 
 export class CardNumber {
-  public readonly cardNumber: string;
+  private readonly cardNumber: string;
 
   private constructor(description: string) {
     this.cardNumber = description;
     Object.freeze(this);
+  }
+
+  get value() {
+    return this.cardNumber;
   }
 
   private isValidCardNumber(cardNumber: string): boolean {

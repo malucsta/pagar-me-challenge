@@ -7,11 +7,15 @@ export enum PaymentMethodsEnum {
 }
 
 export class PaymentMethod {
-  public readonly paymentMethod: number;
+  private readonly paymentMethod: number;
 
   private constructor(paymentMethod: number) {
     this.paymentMethod = paymentMethod;
     Object.freeze(this);
+  }
+
+  get value() {
+    return this.paymentMethod;
   }
 
   private isValidPaymentMethod(paymentMethod: number): boolean {

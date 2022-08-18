@@ -3,11 +3,15 @@ import { generateUUID } from '../../../shared/helpers/generateUUID';
 import { InvalidArgumentError } from '../errors/invalid-argument';
 
 export class Id {
-  public readonly id: string;
+  private readonly id: string;
 
   private constructor(id?: string) {
     this.id = !id ? generateUUID() : id;
     Object.freeze(this);
+  }
+
+  get value() {
+    return this.id;
   }
 
   private isValidId(id: string): boolean {
@@ -26,10 +30,6 @@ export class Id {
     }
 
     return right(new Id());
-  }
-
-  get value() {
-    return this.id;
   }
 
   static validate(id: string): Either<InvalidArgumentError, boolean> {

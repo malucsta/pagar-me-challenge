@@ -2,11 +2,15 @@ import { Either, left, right } from '../../../shared/either';
 import { InvalidArgumentError } from '../errors/invalid-argument';
 
 export class Value {
-  public readonly value: number;
+  private readonly value: number;
 
   private constructor(value: number) {
     this.value = value;
     Object.freeze(this);
+  }
+
+  get getValue() {
+    return this.value;
   }
 
   private isValidValue(value: number): boolean {
