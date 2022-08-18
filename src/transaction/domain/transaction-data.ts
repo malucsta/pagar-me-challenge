@@ -1,7 +1,7 @@
 import { ClientData } from '../../client/domain/client-data';
 
 export interface TransactionDataDTO {
-  id: string;
+  id?: string;
   description: string;
   paymentMethod: number;
   value: number;

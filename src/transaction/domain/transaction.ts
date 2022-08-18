@@ -74,7 +74,7 @@ export class Transaction {
     const cardCvvOrError = CardCvv.create(transactionData.cardCvv);
     if (cardCvvOrError.isLeft()) return left(cardCvvOrError.value);
 
-    const clientIdOrError = Id.create(transactionData.client.toString());
+    const clientIdOrError = Id.create(transactionData.client);
     if (clientIdOrError.isLeft()) return left(clientIdOrError.value);
 
     const idOrError = id ? Id.create(id) : Id.create();

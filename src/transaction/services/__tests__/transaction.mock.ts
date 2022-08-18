@@ -9,6 +9,23 @@ export const findByIdResponse = {
   cardCvv: '123',
 };
 
+export const TransactionResponse = {
+  id: 'dd1d7520-03bc-4f9f-85ac-f8bb8e8de18a',
+  description: 'Smartband XYZ 3.0',
+  paymentMethod: 1,
+  value: 79.99,
+  cardNumber: '7890',
+  cardOwner: 'Client',
+  cardExpirationDate: '01/2023',
+  cardCvv: '123',
+  client: {
+    id: '20ef9f08-e5f0-4649-8965-61e0e1dab29e',
+    name: 'Client',
+    account: '123456',
+    isActive: true,
+  },
+};
+
 export const findAllResponse = [
   {
     id: '747a3f7a-33dc-40dd-8970-aecf31c08d0b',
@@ -43,43 +60,30 @@ export const findAllResponse = [
 ];
 
 export const FindByClientIdResponse = [
-  {
-    id: '747a3f7a-33dc-40dd-8970-aecf31c08d0b',
-    description: 'Notebook',
-    paymentMethod: 1,
-    value: 10.99,
-    cardNumber: '7890',
-    cardOwner: 'Client',
-    cardExpirationDate: '01/2023',
-    cardCvv: '123',
-  },
-  {
-    id: 'dd1d7520-03bc-4f9f-85ac-f8bb8e8de18a',
-    description: 'Smartband XYZ 3.0',
-    paymentMethod: 1,
-    value: 79.99,
-    cardNumber: '7890',
-    cardOwner: 'Client',
-    cardExpirationDate: '01/2023',
-    cardCvv: '123',
-  },
+  TransactionResponse,
+  TransactionResponse,
 ];
 
-export const createTransactionResponse = {
-  id: 'dd1d7520-03bc-4f9f-85ac-f8bb8e8de18a',
+export const createTransactionDTO = {
   description: 'Smartband XYZ 3.0',
   paymentMethod: 1,
   value: 79.99,
-  cardNumber: '7890',
+  cardNumber: '1234567890',
   cardOwner: 'Client',
   cardExpirationDate: '01/2023',
   cardCvv: '123',
-  client: {
-    id: '20ef9f08-e5f0-4649-8965-61e0e1dab29e',
-    name: 'Client',
-    account: '123456',
-    isActive: true,
-  },
+  client: '20ef9f08-e5f0-4649-8965-61e0e1dab29e',
+};
+
+export const invalidCreateTransactionDTO = {
+  description: 'Smartband XYZ 3.0',
+  paymentMethod: 1,
+  value: 79.99,
+  cardNumber: '1234567890',
+  cardOwner: 'Client',
+  cardExpirationDate: '01/2020',
+  cardCvv: '123',
+  client: '20ef9f08-e5f0-4649-8965-61e0e1dab29e',
 };
 
 export const clientFoundById = {

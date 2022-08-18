@@ -22,7 +22,9 @@ export class TransactionService {
     private readonly clientService: ClientService,
   ) {}
 
-  async findAll(): Promise<Either<InvalidArgumentError, TransactionData[]>> {
+  async findAll(): Promise<
+    Either<TransactionNotFoundError, TransactionData[]>
+  > {
     const transactions = await this.repository.find();
 
     if (!transactions) return left(new TransactionNotFoundError());
@@ -49,7 +51,9 @@ export class TransactionService {
 
   async findByClientId(
     id: string,
-  ): Promise<Either<InvalidArgumentError, TransactionData[]>> {
+  ): Promise<
+    Either<InvalidArgumentError | TransactionNotFoundError, TransactionData[]>
+  > {
     const isValidIdOrError = Id.validate(id);
     if (isValidIdOrError.isLeft()) return left(isValidIdOrError.value);
 
@@ -61,7 +65,8 @@ export class TransactionService {
       },
     });
 
-    if (!transaction) return left(new TransactionNotFoundError(id));
+    if (!transaction || transaction === [])
+      return left(new TransactionNotFoundError(id));
 
     return right(transaction);
   }
