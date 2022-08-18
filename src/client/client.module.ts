@@ -8,5 +8,6 @@ import { ClientService } from './services/client.service';
   imports: [TypeOrmModule.forFeature([ClientEntity])],
   controllers: [ClientController],
   providers: [ClientService],
+  exports: [ClientService],
 })
 export class ClientModule {}

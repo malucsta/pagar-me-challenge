@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put, Res } from '@nestjs/common';
-import { ClientDataDTO } from 'src/client/domain/client-data';
+import { ClientDataDTO } from '../../domain/client-data';
 import { ClientService } from '../../services/client.service';
 import { NullArgumentsError } from './errors/null-argument.error';
 import { throwError } from './errors/throw-error';
