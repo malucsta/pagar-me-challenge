@@ -40,7 +40,7 @@ describe('Transaction domain entity', () => {
       const descriptionOrError = Description.create('Smartband XYZ 3.0');
 
       const value = descriptionOrError.isRight()
-        ? descriptionOrError.value.description
+        ? descriptionOrError.value.value
         : null;
 
       expect(descriptionOrError.isRight()).toBe(true);
@@ -76,9 +76,7 @@ describe('Transaction domain entity', () => {
     it('should return a valid payment method', () => {
       const methodOrError = PaymentMethod.create(PaymentMethodsEnum.creditCard);
 
-      const value = methodOrError.isRight()
-        ? methodOrError.value.paymentMethod
-        : null;
+      const value = methodOrError.isRight() ? methodOrError.value.value : null;
 
       expect(methodOrError.isRight()).toBe(true);
       expect(methodOrError.value).toBeInstanceOf(PaymentMethod);
@@ -104,7 +102,7 @@ describe('Transaction domain entity', () => {
     it('should return a valid value', () => {
       const valueOrError = Value.create(99.99);
 
-      const value = valueOrError.isRight() ? valueOrError.value.value : null;
+      const value = valueOrError.isRight() ? valueOrError.value.getValue : null;
 
       expect(valueOrError.isRight()).toBe(true);
       expect(valueOrError.value).toBeInstanceOf(Value);
@@ -138,7 +136,7 @@ describe('Transaction domain entity', () => {
       const cardNumberOrError = CardNumber.create('1234567890');
 
       const value = cardNumberOrError.isRight()
-        ? cardNumberOrError.value.cardNumber
+        ? cardNumberOrError.value.value
         : null;
 
       expect(cardNumberOrError.isRight()).toBe(true);
@@ -180,7 +178,7 @@ describe('Transaction domain entity', () => {
       const cardOwnerOrError = CardOwner.create('Card Owner');
 
       const value = cardOwnerOrError.isRight()
-        ? cardOwnerOrError.value.cardOwner
+        ? cardOwnerOrError.value.value
         : null;
 
       expect(cardOwnerOrError.isRight()).toBe(true);
@@ -215,7 +213,7 @@ describe('Transaction domain entity', () => {
       const expirationDateOrError = CardExpirationDate.create('11/2022');
 
       const value = expirationDateOrError.isRight()
-        ? expirationDateOrError.value.expirationDate
+        ? expirationDateOrError.value.value
         : null;
 
       expect(expirationDateOrError.isRight()).toBe(true);
@@ -270,7 +268,7 @@ describe('Transaction domain entity', () => {
     it('should return valid cvv', () => {
       const cvvOrError = CardCvv.create('123');
 
-      const value = cvvOrError.isRight() ? cvvOrError.value.cardCvv : null;
+      const value = cvvOrError.isRight() ? cvvOrError.value.value : null;
 
       expect(cvvOrError.isRight()).toBe(true);
       expect(cvvOrError.value).toBeInstanceOf(CardCvv);
