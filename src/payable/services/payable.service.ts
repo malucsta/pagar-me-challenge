@@ -7,7 +7,7 @@ import { PayableEntity } from '../adapters/typeorm/entities/payable.entity';
 import { PayableNotFoundError } from '../domain/errors/not-found';
 import { Payable } from '../domain/payable';
 import { CreatePayableDataDTO, PayableData } from '../domain/payable-data';
-import { Id } from '../domain/value objects/payableId';
+import { Id } from '../domain/value-objects/id';
 
 @Injectable()
 export class PayableService {

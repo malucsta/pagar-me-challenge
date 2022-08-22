@@ -1,14 +1,14 @@
 import { Either, left, right } from '../../shared/either';
 import { InvalidArgumentError } from './errors/invalid-argument';
 import { TransactionDataDTO } from './transaction-data';
-import { CardCvv } from './value objects/transactionCardCvv';
-import { CardExpirationDate } from './value objects/transactionCardExpirationDate';
-import { CardNumber } from './value objects/transactionCardNumber';
-import { CardOwner } from './value objects/transactionCardOwner';
-import { Description } from './value objects/transactionDescription';
-import { Id } from './value objects/transactionId';
-import { PaymentMethod } from './value objects/transactionMethod';
-import { Value } from './value objects/transactionValue';
+import { CardCvv } from './value-objects/card-cvv';
+import { CardExpirationDate } from './value-objects/card-expiration-date';
+import { CardNumber } from './value-objects/card-number';
+import { CardOwner } from './value-objects/card-owner';
+import { Description } from './value-objects/description';
+import { Id } from './value-objects/id';
+import { PaymentMethod } from './value-objects/payment-method';
+import { Value } from './value-objects/value';
 
 export class Transaction {
   public readonly id: Id;

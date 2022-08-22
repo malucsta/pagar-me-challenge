@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClientEntity } from '../adapters/typeorm/entities/client.entity';
 import { Either, left, right } from '../../shared/either';
-import { Id } from '../domain/value objects/clientId';
+import { Id } from '../domain/value-objects/id';
 import { InvalidArgumentError } from '../domain/errors/invalid-argument';
 import { ClientNotFoundError } from '../domain/errors/client-not-found';
 import { ClientData, ClientDataDTO } from '../domain/client-data';

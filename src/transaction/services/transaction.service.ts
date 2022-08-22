@@ -12,7 +12,7 @@ import {
   TransactionData,
   TransactionDataDTO,
 } from '../domain/transaction-data';
-import { Id } from '../domain/value objects/transactionId';
+import { Id } from '../domain/value-objects/id';
 
 @Injectable()
 export class TransactionService {

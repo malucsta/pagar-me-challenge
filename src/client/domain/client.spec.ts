@@ -1,9 +1,8 @@
-import { generateUUID } from 'src/shared/helpers/generateUUID';
 import { Client } from './client';
 import { InvalidArgumentError } from './errors/invalid-argument';
-import { Account } from './value objects/clientAccount';
-import { Id } from './value objects/clientId';
-import { Name } from './value objects/clientName';
+import { Account } from './value-objects/account';
+import { Id } from './value-objects/id';
+import { Name } from './value-objects/name';
 
 describe('Client Domain Entity', () => {
   describe('Name', () => {

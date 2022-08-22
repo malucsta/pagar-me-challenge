@@ -1,12 +1,9 @@
 import { InvalidArgumentError } from './errors/invalid-argument';
 import { Payable } from './payable';
-import { Id } from './value objects/payableId';
-import { PaymentDate } from './value objects/payablePaymentDate';
-import {
-  PayableStatus,
-  PayableStatusEnum,
-} from './value objects/payableStatus';
-import { Value } from './value objects/payableValue';
+import { Id } from './value-objects/id';
+import { PaymentDate } from './value-objects/payment-date';
+import { PayableStatus, PayableStatusEnum } from './value-objects/status';
+import { Value } from './value-objects/value';
 
 describe('Payable Domain Entity', () => {
   describe('Payable Id', () => {

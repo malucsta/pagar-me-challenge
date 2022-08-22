@@ -1,15 +1,15 @@
 import { InvalidArgumentError } from './errors/invalid-argument';
-import { CardCvv } from './value objects/transactionCardCvv';
-import { CardExpirationDate } from './value objects/transactionCardExpirationDate';
-import { CardNumber } from './value objects/transactionCardNumber';
-import { CardOwner } from './value objects/transactionCardOwner';
-import { Description } from './value objects/transactionDescription';
-import { Id } from './value objects/transactionId';
+import { CardCvv } from './value-objects/card-cvv';
+import { CardExpirationDate } from './value-objects/card-expiration-date';
+import { CardNumber } from './value-objects/card-number';
+import { CardOwner } from './value-objects/card-owner';
+import { Description } from './value-objects/description';
+import { Id } from './value-objects/id';
 import {
   PaymentMethod,
   PaymentMethodsEnum,
-} from './value objects/transactionMethod';
-import { Value } from './value objects/transactionValue';
+} from './value-objects/payment-method';
+import { Value } from './value-objects/value';
 
 describe('Transaction domain entity', () => {
   describe('Transaction Id', () => {
