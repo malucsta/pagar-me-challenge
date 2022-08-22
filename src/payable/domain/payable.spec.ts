@@ -171,8 +171,8 @@ describe('Payable Domain Entity', () => {
       const payableOrError = Payable.create({
         value: 100,
         status: 5,
-        clientId: '913c5e59-53aa-47d7-8753-66aa49584e89',
-        transactionId: '913c5e59-53aa-47d7-8753-66aa49584e80',
+        client: '913c5e59-53aa-47d7-8753-66aa49584e89',
+        transaction: '913c5e59-53aa-47d7-8753-66aa49584e80',
       });
 
       const payable = payableOrError.isRight() ? payableOrError.value : null;
@@ -200,8 +200,8 @@ describe('Payable Domain Entity', () => {
         {
           value: 100,
           status: 5,
-          clientId: '913c5e59-53aa-47d7-8753-66aa49584e89',
-          transactionId: '913c5e59-53aa-47d7-8753-66aa49584e80',
+          client: '913c5e59-53aa-47d7-8753-66aa49584e89',
+          transaction: '913c5e59-53aa-47d7-8753-66aa49584e80',
         },
         '913c5e59-53aa-47d7-8753-66aa49584e81',
       );
@@ -227,8 +227,8 @@ describe('Payable Domain Entity', () => {
       const payableOrError = Payable.create({
         value: 100,
         status: 3,
-        clientId: '913c5e59-53aa-47d7-8753-66aa49584e89',
-        transactionId: '913c5e59-53aa-47d7-8753-66aa49584e80',
+        client: '913c5e59-53aa-47d7-8753-66aa49584e89',
+        transaction: '913c5e59-53aa-47d7-8753-66aa49584e80',
       });
 
       const payable = payableOrError.isRight() ? payableOrError.value : null;
@@ -247,8 +247,8 @@ describe('Payable Domain Entity', () => {
       const payableOrError = Payable.create({
         value: 100,
         status: 5,
-        clientId: '913c5e59-53aa-47d7-8753-66aa49584e89',
-        transactionId: '913c5e59-53aa-47d7-8753-66aa49584e80',
+        client: '913c5e59-53aa-47d7-8753-66aa49584e89',
+        transaction: '913c5e59-53aa-47d7-8753-66aa49584e80',
       });
 
       const payable = payableOrError.isRight() ? payableOrError.value : null;

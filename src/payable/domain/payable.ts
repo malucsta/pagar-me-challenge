@@ -1,6 +1,6 @@
 import { Either, left, right } from '../../shared/either';
 import { InvalidArgumentError } from './errors/invalid-argument';
-import { PayableDataDTO } from './payable-data';
+import { CreatePayableDataDTO, PayableDataDTO } from './payable-data';
 import { Id } from './value objects/payableId';
 import { PaymentDate } from './value objects/payablePaymentDate';
 import { PayableStatus } from './value objects/payableStatus';
@@ -32,7 +32,7 @@ export class Payable {
   }
 
   static create(
-    payableData: PayableDataDTO,
+    payableData: PayableDataDTO | CreatePayableDataDTO,
     id?: string,
   ): Either<InvalidArgumentError, Payable> {
     const statusOrError = PayableStatus.create(payableData.status);
@@ -56,10 +56,10 @@ export class Payable {
     const idOrError = id ? Id.create(id) : Id.create();
     if (idOrError.isLeft()) return left(idOrError.value);
 
-    const clientIdOrError = Id.create(payableData.clientId);
+    const clientIdOrError = Id.create(payableData.client);
     if (clientIdOrError.isLeft()) return left(clientIdOrError.value);
 
-    const transactionIdOrError = Id.create(payableData.transactionId);
+    const transactionIdOrError = Id.create(payableData.transaction);
     if (transactionIdOrError.isLeft()) return left(transactionIdOrError.value);
 
     const payableId = idOrError.value;

@@ -27,11 +27,11 @@ export class PayableEntity {
     nullable: false,
   })
   @JoinColumn([{ name: 'fk_client_id', referencedColumnName: 'id' }])
-  client: ClientEntity;
+  client: string;
 
   @OneToOne(() => TransactionEntity, {
     nullable: false,
   })
   @JoinColumn([{ name: 'fk_transaction_id', referencedColumnName: 'id' }])
-  transaction: TransactionEntity;
+  transaction: string;
 }
