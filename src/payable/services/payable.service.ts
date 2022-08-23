@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Either, left, right } from 'src/shared/either';
-import { InvalidArgumentError } from 'src/transaction/domain/errors/invalid-argument';
+import { Either, left, right } from '../../shared/either';
+import { InvalidArgumentError } from '../domain/errors/invalid-argument';
 import { Repository } from 'typeorm';
 import { PayableEntity } from '../adapters/typeorm/entities/payable.entity';
 import { PayableNotFoundError } from '../domain/errors/not-found';
 import { Payable } from '../domain/payable';
-import { CreatePayableDataDTO, PayableData } from '../domain/payable-data';
+import { PayableData, PayableDataDTO } from '../domain/payable-data';
 import { Id } from '../domain/value-objects/id';
+import { PayableStatus } from '../domain/value-objects/status';
 
 @Injectable()
 export class PayableService {
@@ -41,8 +42,29 @@ export class PayableService {
     return right(payable);
   }
 
+  async findByStatus(
+    clientId: string,
+    status: number,
+  ): Promise<
+    Either<PayableNotFoundError | InvalidArgumentError, PayableData[]>
+  > {
+    const isValidStatus = PayableStatus.validate(status);
+    if (isValidStatus.isLeft()) return left(isValidStatus.value);
+
+    const payables = await this.repository.find({
+      where: {
+        client: clientId,
+        status: status,
+      },
+    });
+
+    if (!payables) return left(new PayableNotFoundError());
+
+    return right(payables);
+  }
+
   async create(
-    payableToCreate: CreatePayableDataDTO,
+    payableToCreate: PayableDataDTO,
   ): Promise<Either<InvalidArgumentError, PayableData>> {
     const payableOrError = Payable.create(payableToCreate);
 
@@ -55,11 +77,43 @@ export class PayableService {
       value: payable.value.getValue,
       paymentDate: payable.paymentDate.value,
       status: payable.status.value,
-      client: payable.clientId.value,
-      transaction: payable.transactionId.value,
+      client: payable.client.value,
+      transaction: payable.transaction.value,
     });
 
     return right(createdPayable);
+  }
+
+  async update(
+    payableToCreate: PayableDataDTO,
+    id: string,
+  ): Promise<Either<InvalidArgumentError | PayableNotFoundError, PayableData>> {
+    const isValidIdOrError = Id.validate(id);
+    if (isValidIdOrError.isLeft()) return left(isValidIdOrError.value);
+
+    const existingPayableOrError = await this.findById(id);
+    if (existingPayableOrError.isLeft())
+      return left(existingPayableOrError.value);
+
+    const payableOrError = Payable.constructValidPayable(
+      existingPayableOrError.value,
+      payableToCreate,
+    );
+
+    if (payableOrError.isLeft()) return left(payableOrError.value);
+
+    const payable = payableOrError.value;
+
+    const updatedPayable = await this.repository.save({
+      id: payable.id.value,
+      value: payable.value.getValue,
+      paymentDate: payable.paymentDate.value,
+      status: payable.status.value,
+      client: payable.client.value,
+      transaction: payable.transaction.value,
+    });
+
+    return right(updatedPayable);
   }
 
   async delete(

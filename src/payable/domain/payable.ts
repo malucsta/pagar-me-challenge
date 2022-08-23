@@ -1,6 +1,6 @@
 import { Either, left, right } from '../../shared/either';
 import { InvalidArgumentError } from './errors/invalid-argument';
-import { CreatePayableDataDTO, PayableDataDTO } from './payable-data';
+import { PayableData, PayableDataDTO } from './payable-data';
 import { Id } from './value-objects/id';
 import { PaymentDate } from './value-objects/payment-date';
 import { PayableStatus } from './value-objects/status';
@@ -11,28 +11,28 @@ export class Payable {
   public readonly value: Value;
   public readonly paymentDate: PaymentDate;
   public readonly status: PayableStatus;
-  public readonly clientId: Id;
-  public readonly transactionId: Id;
+  public readonly client: Id;
+  public readonly transaction: Id;
 
   private constructor(
     id: Id,
     value: Value,
     paymentDate: PaymentDate,
     status: PayableStatus,
-    clientId: Id,
-    transactionId: Id,
+    client: Id,
+    transaction: Id,
   ) {
     this.id = id;
     this.value = value;
     this.paymentDate = paymentDate;
     this.status = status;
-    this.clientId = clientId;
-    this.transactionId = transactionId;
+    this.client = client;
+    this.transaction = transaction;
     Object.freeze(this);
   }
 
   static create(
-    payableData: PayableDataDTO | CreatePayableDataDTO,
+    payableData: PayableDataDTO,
     id?: string,
   ): Either<InvalidArgumentError, Payable> {
     const statusOrError = PayableStatus.create(payableData.status);
@@ -66,8 +66,8 @@ export class Payable {
     const payableValue = valueOrError.value;
     const paymentDate = paymentDateOrError.value;
     const status = statusOrError.value;
-    const clientId = clientIdOrError.value;
-    const transactionId = transactionIdOrError.value;
+    const client = clientIdOrError.value;
+    const transaction = transactionIdOrError.value;
 
     return right(
       new Payable(
@@ -75,8 +75,8 @@ export class Payable {
         payableValue,
         paymentDate,
         status,
-        clientId,
-        transactionId,
+        client,
+        transaction,
       ),
     );
   }
@@ -96,5 +96,40 @@ export class Payable {
           actualDate.setMonth(actualDate.getMonth() + 1),
         ).toUTCString();
     }
+  }
+
+  static constructValidPayable(
+    existingPayable: PayableData,
+    valuesToUpdate: PayableDataDTO,
+  ): Either<InvalidArgumentError, Payable> {
+    const value = valuesToUpdate.value
+      ? valuesToUpdate.value
+      : existingPayable.value;
+
+    const status = valuesToUpdate.status
+      ? valuesToUpdate.status
+      : existingPayable.status;
+
+    const client = valuesToUpdate.client
+      ? valuesToUpdate.client
+      : existingPayable.client;
+
+    const transaction = valuesToUpdate.transaction
+      ? valuesToUpdate.transaction
+      : existingPayable.transaction;
+
+    const payableOrError = Payable.create(
+      {
+        value: value,
+        status: status,
+        client: client,
+        transaction: transaction,
+      },
+      existingPayable.id,
+    );
+
+    if (payableOrError.isLeft()) return left(payableOrError.value);
+
+    return right(payableOrError.value);
   }
 }

@@ -1,9 +1,19 @@
 import { InvalidArgumentError } from './errors/invalid-argument';
 import { Payable } from './payable';
+import { PayableData, PayableDataDTO } from './payable-data';
 import { Id } from './value-objects/id';
 import { PaymentDate } from './value-objects/payment-date';
 import { PayableStatus, PayableStatusEnum } from './value-objects/status';
 import { Value } from './value-objects/value';
+
+const existingPayable: PayableData = {
+  id: '913c5e59-53aa-47d7-8753-66aa49584e89',
+  value: 200,
+  paymentDate: '2022-09-22',
+  status: 5,
+  client: '913c5e59-53aa-47d7-8753-66aa49584e80',
+  transaction: '913c5e59-53aa-47d7-8753-66aa49584e81',
+};
 
 describe('Payable Domain Entity', () => {
   describe('Payable Id', () => {
@@ -253,6 +263,33 @@ describe('Payable Domain Entity', () => {
       expect(payableOrError.isRight()).toBe(true);
       expect(payableOrError.value).toBeInstanceOf(Payable);
       expect(payable.paymentDate.value).toEqual(expectedDate);
+    });
+  });
+
+  describe('Construct valid payable method', () => {
+    it('should return a valid payable', () => {
+      const valuesToUpdate: PayableDataDTO = {
+        value: 100,
+        status: 3,
+        client: '913c5e59-53aa-47d7-8753-66aa49584e90',
+        transaction: '913c5e59-53aa-47d7-8753-66aa49584e10',
+      };
+      const payableOrError = Payable.constructValidPayable(
+        existingPayable,
+        valuesToUpdate,
+      );
+
+      const actualDate = new Date().toUTCString();
+      const values = payableOrError.isRight() ? payableOrError.value : null;
+
+      expect(payableOrError.isRight()).toBe(true);
+      expect(payableOrError.value).toBeInstanceOf(Payable);
+      expect(values.id.value).toBe(existingPayable.id);
+      expect(values.value.getValue).toBe(97);
+      expect(values.paymentDate.value).toBe(actualDate);
+      expect(values.status.value).toBe(valuesToUpdate.status);
+      expect(values.clientId.value).toBe(valuesToUpdate.client);
+      expect(values.transactionId.value).toBe(valuesToUpdate.transaction);
     });
   });
 });
