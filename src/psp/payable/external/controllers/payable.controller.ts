@@ -11,8 +11,8 @@ import {
 import { PayableDataDTO } from 'src/psp/payable/domain/payable-data';
 import { PayableStatusEnum } from 'src/psp/payable/domain/value-objects/status';
 import { PayableService } from 'src/psp/payable/services/payable.service';
-import { NullArgumentsError } from './errors/null-argument.error';
-import { throwError } from './errors/throw-error';
+import { NullArgumentsError } from '../../../shared/errors/controller-error/null-arguments';
+import { throwError } from '../../../shared/errors/controller-error/throw-error';
 
 @Controller('payable')
 export class PayableController {

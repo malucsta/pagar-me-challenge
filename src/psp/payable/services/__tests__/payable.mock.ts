@@ -1,4 +1,4 @@
-import { PayableEntity } from 'src/psp/payable/adapters/typeorm/entities/payable.entity';
+import { PayableEntity } from 'src/psp/payable/external/typeorm/entities/payable.entity';
 import {
   PayableData,
   PayableDataDTO,

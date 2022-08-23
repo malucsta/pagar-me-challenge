@@ -4,7 +4,7 @@ import { EntityNotFoundError } from '../../shared/errors/entity-not-found';
 import { ClientService } from '../../client/services/client.service';
 import { Repository } from 'typeorm';
 import { Either, left, right } from '../../shared/either';
-import { TransactionEntity } from '../adapters/typeorm/entities/transaction.entity';
+import { TransactionEntity } from '../external/typeorm/entities/transaction.entity';
 import { InvalidArgumentError } from '../../shared/errors/invalid-argument';
 import { Transaction } from '../domain/transaction';
 import {

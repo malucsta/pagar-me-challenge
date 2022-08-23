@@ -1,9 +1,9 @@
-import { AdapterError, ControllerError } from './error-types';
+import { AdapterError, ControllerErrorCode } from './errors';
 
 export class NullArgumentsError extends Error implements AdapterError {
   status: string;
   constructor(message: string) {
     super(message);
-    this.status = ControllerError.NullArguments;
+    this.status = ControllerErrorCode.NullArguments;
   }
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Either, left, right } from '../../shared/either';
 import { InvalidArgumentError } from '../../shared/errors/invalid-argument';
 import { Repository } from 'typeorm';
-import { PayableEntity } from '../adapters/typeorm/entities/payable.entity';
+import { PayableEntity } from '../external/typeorm/entities/payable.entity';
 import { EntityNotFoundError } from '../../shared/errors/entity-not-found';
 import { Payable } from '../domain/payable';
 import { PayableData, PayableDataDTO } from '../domain/payable-data';

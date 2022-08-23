@@ -1,4 +1,4 @@
-import { ClientEntity } from '../../../../client/adapters/typeorm/entities/client.entity';
+import { ClientEntity } from '../../../../client/external/typeorm/entities/client.entity';
 import {
   Column,
   Entity,
@@ -7,7 +7,7 @@ import {
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { TransactionEntity } from '../../../../transaction/adapters/typeorm/entities/transaction.entity';
+import { TransactionEntity } from '../../../../transaction/external/typeorm/entities/transaction.entity';
 
 @Entity({ name: 'payable' })
 export class PayableEntity {

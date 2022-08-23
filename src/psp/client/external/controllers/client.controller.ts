@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Put, Res } from '@nestjs/common';
 import { ClientDataDTO } from '../../domain/client-data';
 import { ClientService } from '../../services/client.service';
-import { NullArgumentsError } from './errors/null-argument.error';
-import { throwError } from './errors/throw-error';
+import { NullArgumentsError } from '../../../shared/errors/controller-error/null-arguments';
+import { throwError } from '../../../shared/errors/controller-error/throw-error';
 
 @Controller('client')
 export class ClientController {

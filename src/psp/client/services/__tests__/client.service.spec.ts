@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ClientEntity } from '../../adapters/typeorm/entities/client.entity';
+import { ClientEntity } from '../../external/typeorm/entities/client.entity';
 import {
   clientMock,
   createClientDTOMock,

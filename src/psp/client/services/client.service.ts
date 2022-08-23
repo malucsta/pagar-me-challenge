@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ClientEntity } from '../adapters/typeorm/entities/client.entity';
+import { ClientEntity } from '../external/typeorm/entities/client.entity';
 import { Either, left, right } from '../../shared/either';
 import { Id } from '../domain/value-objects/id';
 import { InvalidArgumentError } from '../../shared/errors/invalid-argument';

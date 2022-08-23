@@ -2,7 +2,7 @@ export interface AdapterError {
   message: string;
 }
 
-export enum ControllerError {
+export enum ControllerErrorCode {
   NullArguments = '400',
   InternalError = '500',
 }

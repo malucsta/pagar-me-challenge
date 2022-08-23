@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { TransactionDataDTO } from '../../domain/transaction-data';
 import { TransactionService } from '../../services/transaction.service';
-import { throwError } from './errors/throw-error';
+import { throwError } from '../../../shared/errors/controller-error/throw-error';
 
 @Controller('transaction')
 export class TransactionController {

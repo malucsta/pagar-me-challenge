@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { PayableEntity } from '../../adapters/typeorm/entities/payable.entity';
+import { PayableEntity } from '../../external/typeorm/entities/payable.entity';
 import { Repository } from 'typeorm';
 import { PayableService } from '../payable.service';
 import {

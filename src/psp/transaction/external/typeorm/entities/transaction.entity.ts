@@ -1,4 +1,4 @@
-import { ClientEntity } from '../../../../client/adapters/typeorm/entities/client.entity';
+import { ClientEntity } from '../../../../client/external/typeorm/entities/client.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'transaction' })
