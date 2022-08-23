@@ -1,17 +1,13 @@
-import { Either, left, right } from '../../../shared/either';
-import { generateUUID } from '../../../shared/helpers/generateUUID';
-import { InvalidArgumentError } from '../../../shared/errors/invalid-argument';
+import { Either, left, right } from '../either';
+import { generateUUID } from '../helpers/generateUUID';
+import { InvalidArgumentError } from '../errors/invalid-argument';
 
 export class Id {
-  private readonly id: string;
+  public readonly id: string;
 
   private constructor(id?: string) {
     this.id = !id ? generateUUID() : id;
     Object.freeze(this);
-  }
-
-  get value() {
-    return this.id;
   }
 
   private isValidId(id: string): boolean {
@@ -30,6 +26,10 @@ export class Id {
     }
 
     return right(new Id());
+  }
+
+  get value() {
+    return this.id;
   }
 
   static validate(id: string): Either<InvalidArgumentError, boolean> {

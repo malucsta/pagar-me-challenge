@@ -1,5 +1,5 @@
-import { Either, left, right } from '../../../shared/either';
-import { InvalidArgumentError } from '../../../shared/errors/invalid-argument';
+import { Either, left, right } from '../either';
+import { InvalidArgumentError } from '../errors/invalid-argument';
 
 export class Value {
   private readonly value: number;

@@ -1,7 +1,7 @@
 import { Client } from './client';
 import { InvalidArgumentError } from '../../shared/errors/invalid-argument';
 import { Account } from './value-objects/account';
-import { Id } from './value-objects/id';
+import { Id } from '../../shared/value-objects/id';
 import { Name } from './value-objects/name';
 
 describe('Client Domain Entity', () => {

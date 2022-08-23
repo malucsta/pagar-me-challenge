@@ -1,10 +1,10 @@
 import { InvalidArgumentError } from '../../shared/errors/invalid-argument';
 import { Payable } from './payable';
 import { PayableData, PayableDataDTO } from './payable-data';
-import { Id } from './value-objects/id';
+import { Id } from '../../shared/value-objects/id';
 import { PaymentDate } from './value-objects/payment-date';
 import { PayableStatus, PayableStatusEnum } from './value-objects/status';
-import { Value } from './value-objects/value';
+import { Value } from '../../shared/value-objects/value';
 
 const existingPayable: PayableData = {
   id: '913c5e59-53aa-47d7-8753-66aa49584e89',

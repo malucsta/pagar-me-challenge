@@ -11,7 +11,7 @@ import {
   TransactionData,
   TransactionDataDTO,
 } from '../domain/transaction-data';
-import { Id } from '../domain/value-objects/id';
+import { Id } from '../../shared/value-objects/id';
 
 @Injectable()
 export class TransactionService {

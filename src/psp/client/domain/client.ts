@@ -1,7 +1,7 @@
 import { Either, left, right } from '../../shared/either';
 import { ClientData, ClientDataDTO } from './client-data';
 import { Account } from './value-objects/account';
-import { Id } from './value-objects/id';
+import { Id } from '../../shared/value-objects/id';
 import { Name } from './value-objects/name';
 import { InvalidArgumentError } from '../../shared/errors/invalid-argument';
 

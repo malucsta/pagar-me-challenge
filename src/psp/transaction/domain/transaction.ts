@@ -6,9 +6,9 @@ import { CardExpirationDate } from './value-objects/card-expiration-date';
 import { CardNumber } from './value-objects/card-number';
 import { CardOwner } from './value-objects/card-owner';
 import { Description } from './value-objects/description';
-import { Id } from './value-objects/id';
+import { Id } from '../../shared/value-objects/id';
 import { PaymentMethod } from './value-objects/payment-method';
-import { Value } from './value-objects/value';
+import { Value } from '../../shared/value-objects/value';
 
 export class Transaction {
   public readonly id: Id;

@@ -1,10 +1,10 @@
 import { Either, left, right } from '../../shared/either';
 import { InvalidArgumentError } from '../../shared/errors/invalid-argument';
 import { PayableData, PayableDataDTO } from './payable-data';
-import { Id } from './value-objects/id';
+import { Id } from '../../shared/value-objects/id';
 import { PaymentDate } from './value-objects/payment-date';
 import { PayableStatus } from './value-objects/status';
-import { Value } from './value-objects/value';
+import { Value } from '../../shared/value-objects/value';
 
 export class Payable {
   public readonly id: Id;

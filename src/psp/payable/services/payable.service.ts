@@ -7,7 +7,7 @@ import { PayableEntity } from '../external/typeorm/entities/payable.entity';
 import { EntityNotFoundError } from '../../shared/errors/entity-not-found';
 import { Payable } from '../domain/payable';
 import { PayableData, PayableDataDTO } from '../domain/payable-data';
-import { Id } from '../domain/value-objects/id';
+import { Id } from '../../shared/value-objects/id';
 import { PayableStatus } from '../domain/value-objects/status';
 
 @Injectable()
