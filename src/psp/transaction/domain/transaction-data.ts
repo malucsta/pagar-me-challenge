@@ -23,5 +23,5 @@ export interface TransactionData {
   cardOwner: string;
   cardExpirationDate: string;
   cardCvv: string;
-  client: ClientData;
+  client: string;
 }

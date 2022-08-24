@@ -1,6 +1,6 @@
 import { Either, left, right } from '../../shared/either';
 import { InvalidArgumentError } from '../../shared/errors/invalid-argument';
-import { TransactionDataDTO } from './transaction-data';
+import { TransactionData, TransactionDataDTO } from './transaction-data';
 import { CardCvv } from './value-objects/card-cvv';
 import { CardExpirationDate } from './value-objects/card-expiration-date';
 import { CardNumber } from './value-objects/card-number';
@@ -103,5 +103,19 @@ export class Transaction {
         clientId,
       ),
     );
+  }
+
+  static mapObjectToValues(transaction: Transaction): TransactionData {
+    return {
+      id: transaction.id.value,
+      description: transaction.description.value,
+      paymentMethod: transaction.paymentMethod.value,
+      value: transaction.value.getValue,
+      cardNumber: transaction.cardNumber.value,
+      cardOwner: transaction.cardOwner.value,
+      cardExpirationDate: transaction.cardExpirationDate.value,
+      cardCvv: transaction.cardCvv.value,
+      client: transaction.clientId.value,
+    };
   }
 }

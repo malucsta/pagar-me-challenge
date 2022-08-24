@@ -40,5 +40,5 @@ export class TransactionEntity {
     nullable: false,
   })
   @JoinColumn([{ name: 'fk_client_id', referencedColumnName: 'id' }])
-  client: ClientEntity;
+  client: string;
 }

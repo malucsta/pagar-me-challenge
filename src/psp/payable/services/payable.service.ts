@@ -63,6 +63,27 @@ export class PayableService {
     return right(payables);
   }
 
+  async retriveBalanceByStatus(
+    clientId: string,
+    status: number,
+  ): Promise<Either<EntityNotFoundError | InvalidArgumentError, number>> {
+    const isValidStatus = PayableStatus.validate(status);
+    if (isValidStatus.isLeft()) return left(isValidStatus.value);
+
+    const balanceOrError = await this.findByStatus(clientId, status);
+    if (balanceOrError.isLeft()) return left(balanceOrError.value);
+
+    let balance = 0;
+
+    balanceOrError.value.forEach((object) => {
+      balance += object.value;
+    });
+
+    if (!balance) return left(new EntityNotFoundError());
+
+    return right(balance);
+  }
+
   async create(
     payableToCreate: PayableDataDTO,
   ): Promise<Either<InvalidArgumentError, PayableData>> {

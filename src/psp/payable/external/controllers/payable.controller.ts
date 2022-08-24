@@ -100,6 +100,53 @@ export class PayableController {
     }
   }
 
+  @Get('balance/:id/available')
+  async getPaidBalance(@Res() response, @Param('clientId') clientId: string) {
+    try {
+      const findPayableResponse = await this.service.retriveBalanceByStatus(
+        clientId,
+        PayableStatusEnum.paid,
+      );
+
+      if (findPayableResponse.isLeft())
+        return throwError(response, findPayableResponse.value);
+
+      return response.send({
+        message: {},
+        data: findPayableResponse.value,
+      });
+    } catch (error) {
+      return response
+        .status(500)
+        .send({ message: 'internal server error', data: {} });
+    }
+  }
+
+  @Get('balance/:id/waiting-funds')
+  async getWaitingBalance(
+    @Res() response,
+    @Param('clientId') clientId: string,
+  ) {
+    try {
+      const findPayableResponse = await this.service.retriveBalanceByStatus(
+        clientId,
+        PayableStatusEnum.waiting_funds,
+      );
+
+      if (findPayableResponse.isLeft())
+        return throwError(response, findPayableResponse.value);
+
+      return response.send({
+        message: {},
+        data: findPayableResponse.value,
+      });
+    } catch (error) {
+      return response
+        .status(500)
+        .send({ message: 'internal server error', data: {} });
+    }
+  }
+
   @Post()
   async create(@Res() response, @Body() payable: PayableDataDTO) {
     try {

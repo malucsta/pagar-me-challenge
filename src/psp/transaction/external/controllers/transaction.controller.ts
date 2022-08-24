@@ -35,20 +35,6 @@ export class TransactionController {
     }
   }
 
-  @Get('client/:id')
-  async findByClientId(@Res() response, @Param('id') id: string) {
-    try {
-      const findTransactionResponse = await this.service.findByClientId(id);
-
-      if (findTransactionResponse.isLeft())
-        throwError(response, findTransactionResponse.value);
-
-      response.send({ message: {}, data: findTransactionResponse.value });
-    } catch (error) {
-      response.status(500).send({ message: 'internal server error', data: {} });
-    }
-  }
-
   @Post()
   async create(@Res() response, @Body() transaction: TransactionDataDTO) {
     try {
