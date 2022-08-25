@@ -90,20 +90,22 @@ export class PayableService {
     const isValidIdOrError = Id.validate(transactionId);
     if (isValidIdOrError.isLeft()) return left(isValidIdOrError.value);
 
-    const foundPayable = await this.repository
-      .createQueryBuilder('payable')
-      .select('payable.id', 'id')
-      .where('payable.transaction = :transactionId', { transactionId })
-      .getRawOne();
+    const payables = await this.repository.find({
+      relations: {
+        transaction: true,
+      },
+    });
+
+    const foundPayable = payables
+      .map((element) => {
+        const id = JSON.parse(JSON.stringify(element.transaction)).id;
+        return id === transactionId ? element : null;
+      })
+      .filter((payable) => payable != null);
 
     if (!foundPayable) return left(new EntityNotFoundError());
 
-    const payableID = Object.values(foundPayable).toString();
-
-    const payable = await this.findById(payableID);
-    if (payable.isLeft()) return left(payable.value);
-
-    return right(payable.value);
+    return right(foundPayable[0]);
   }
 
   async create(
