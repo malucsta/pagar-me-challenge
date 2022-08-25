@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
-import { TransactionDataDTO } from '../../domain/transaction-data';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
+import { CreateTransactionDTO } from '../../domain/transaction-data';
 import { TransactionService } from '../../services/transaction.service';
 import { throwError } from '../../../shared/errors/controller-error/throw-error';
+import { NullArgumentsError } from 'src/psp/shared/errors/controller-error/null-arguments';
+import { isNull } from 'src/psp/shared/helpers/isNull';
 
 @Controller('transaction')
 export class TransactionController {
@@ -36,8 +46,11 @@ export class TransactionController {
   }
 
   @Post()
-  async create(@Res() response, @Body() transaction: TransactionDataDTO) {
+  async create(@Res() response, @Body() transaction: CreateTransactionDTO) {
     try {
+      if (isNull(transaction))
+        return throwError(response, new NullArgumentsError('Empty fields'));
+
       const createTransactionResponse = await this.service.create(transaction);
 
       if (createTransactionResponse.isLeft())
@@ -46,6 +59,23 @@ export class TransactionController {
       return response.send({
         message: {},
         data: createTransactionResponse.value,
+      });
+    } catch (error) {
+      response.status(500).send({ message: 'internal server error', data: {} });
+    }
+  }
+
+  @Delete(':id')
+  async delete(@Res() response, @Param('id') id: string) {
+    try {
+      const deleteTransactionResponse = await this.service.delete(id);
+
+      if (deleteTransactionResponse.isLeft())
+        return throwError(response, deleteTransactionResponse.value);
+
+      return response.send({
+        message: {},
+        data: deleteTransactionResponse.value,
       });
     } catch (error) {
       response.status(500).send({ message: 'internal server error', data: {} });

@@ -1,4 +1,4 @@
-export const findByIdResponse = {
+export const singleTransaction = {
   id: 'dd1d7520-03bc-4f9f-85ac-f8bb8e8de18a',
   description: 'Notebook',
   paymentMethod: 1,
@@ -18,12 +18,7 @@ export const TransactionResponse = {
   cardOwner: 'Client',
   cardExpirationDate: '01/2023',
   cardCvv: '123',
-  client: {
-    id: '20ef9f08-e5f0-4649-8965-61e0e1dab29e',
-    name: 'Client',
-    account: '123456',
-    isActive: true,
-  },
+  client: '20ef9f08-e5f0-4649-8965-61e0e1dab29e',
 };
 
 export const findAllResponse = [
@@ -91,4 +86,11 @@ export const clientFoundById = {
   name: 'Client',
   account: '123456',
   isActive: true,
+};
+
+export const singlePayable = {
+  id: 'd6822b62-d8c4-4ea3-926f-1e32e677d92a',
+  value: 97,
+  paymentDate: '2022-08-22',
+  status: 3,
 };

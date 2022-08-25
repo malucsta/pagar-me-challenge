@@ -1,5 +1,3 @@
-import { ClientData } from '../../client/domain/client-data';
-
 export interface TransactionDataDTO {
   id?: string;
   description: string;

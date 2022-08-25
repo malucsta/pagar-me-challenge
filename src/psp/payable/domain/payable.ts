@@ -132,4 +132,15 @@ export class Payable {
 
     return right(payableOrError.value);
   }
+
+  static mapObjectToValues(payable: Payable): PayableData {
+    return {
+      id: payable.id.value,
+      value: payable.value.getValue,
+      paymentDate: payable.paymentDate.value,
+      status: payable.status.value,
+      client: payable.client.value,
+      transaction: payable.transaction.value,
+    };
+  }
 }

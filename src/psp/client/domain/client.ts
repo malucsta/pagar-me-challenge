@@ -73,4 +73,13 @@ export class Client {
 
     return right(clientOrError.value);
   }
+
+  static mapObjectToValues(client: Client): ClientData {
+    return {
+      id: client.id.value,
+      name: client.name.value,
+      account: client.account.value,
+      isActive: client.isActive,
+    };
+  }
 }

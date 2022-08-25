@@ -12,8 +12,8 @@ import {
   TransactionDataDTO,
 } from '../domain/transaction-data';
 import { Id } from '../../shared/value-objects/id';
-import { PayableService } from 'src/psp/payable/services/payable.service';
-import { PayableStatusEnum } from 'src/psp/payable/domain/value-objects/status';
+import { PayableService } from '../../payable/services/payable.service';
+import { PayableStatusEnum } from '../../payable/domain/value-objects/status';
 
 @Injectable()
 export class TransactionService {
@@ -56,19 +56,24 @@ export class TransactionService {
   ): Promise<
     Either<InvalidArgumentError | EntityNotFoundError, TransactionData>
   > {
+    //validates data
     const transactionOrError = Transaction.create(transactionToCreate);
     if (transactionOrError.isLeft()) return left(transactionOrError.value);
 
+    //checks if client exists
     const clientOrError = await this.clientService.findById(
       transactionToCreate.client,
     );
     if (clientOrError.isLeft()) return left(clientOrError.value);
 
+    //extract values
     const transaction = Transaction.mapObjectToValues(transactionOrError.value);
     const client = clientOrError.value;
 
+    //saves transaction
     const createdTransaction = await this.repository.save(transaction);
 
+    //creates payable
     const createdPayableOrError = await this.payableService.create({
       value: transaction.value,
       status:
@@ -83,5 +88,38 @@ export class TransactionService {
       return left(createdPayableOrError.value);
 
     return right(createdTransaction);
+  }
+
+  async delete(
+    id: string,
+  ): Promise<
+    Either<InvalidArgumentError | EntityNotFoundError, TransactionData>
+  > {
+    //validates id
+    const isValidIdOrError = Id.validate(id);
+    if (isValidIdOrError.isLeft()) return left(isValidIdOrError.value);
+
+    //checks if transaction exists and returns it
+    const transactionToBeRemoved = await this.findById(id);
+    if (transactionToBeRemoved.isLeft())
+      return left(transactionToBeRemoved.value);
+
+    //find corresponding payable and deletes it
+    const payableToRemove = await this.payableService.findByTransaction(
+      transactionToBeRemoved.value.id,
+    );
+    if (payableToRemove.isLeft()) return left(payableToRemove.value);
+    const deletedPayableOrError = await this.payableService.delete(
+      payableToRemove.value.id,
+    );
+    if (deletedPayableOrError.isLeft())
+      return left(deletedPayableOrError.value);
+
+    //deletes transaction
+    const transaction = await this.repository.remove(
+      transactionToBeRemoved.value,
+    );
+
+    return right(transaction);
   }
 }

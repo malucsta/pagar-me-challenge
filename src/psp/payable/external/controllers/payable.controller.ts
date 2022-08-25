@@ -8,11 +8,11 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import { PayableDataDTO } from 'src/psp/payable/domain/payable-data';
-import { PayableStatusEnum } from 'src/psp/payable/domain/value-objects/status';
 import { PayableService } from 'src/psp/payable/services/payable.service';
+import { isNull } from 'src/psp/shared/helpers/isNull';
 import { NullArgumentsError } from '../../../shared/errors/controller-error/null-arguments';
 import { throwError } from '../../../shared/errors/controller-error/throw-error';
+import { CreatePayableDTO, UpdatePayableDTO } from './payable.DTO';
 
 @Controller('payable')
 export class PayableController {
@@ -56,82 +56,10 @@ export class PayableController {
     }
   }
 
-  @Get(':id/available')
-  async findPaid(@Res() response, @Param('clientId') clientId: string) {
+  @Get('transaction/:id')
+  async findByTransaction(@Res() response, @Param('id') id: string) {
     try {
-      const findPayableResponse = await this.service.findByStatus(
-        clientId,
-        PayableStatusEnum.paid,
-      );
-
-      if (findPayableResponse.isLeft())
-        return throwError(response, findPayableResponse.value);
-
-      return response.send({
-        message: {},
-        data: findPayableResponse.value,
-      });
-    } catch (error) {
-      return response
-        .status(500)
-        .send({ message: 'internal server error', data: {} });
-    }
-  }
-
-  @Get(':id/waiting_funds')
-  async findWaitingFunds(@Res() response, @Param('clientId') clientId: string) {
-    try {
-      const findPayableResponse = await this.service.findByStatus(
-        clientId,
-        PayableStatusEnum.waiting_funds,
-      );
-
-      if (findPayableResponse.isLeft())
-        return throwError(response, findPayableResponse.value);
-
-      return response.send({
-        message: {},
-        data: findPayableResponse.value,
-      });
-    } catch (error) {
-      return response
-        .status(500)
-        .send({ message: 'internal server error', data: {} });
-    }
-  }
-
-  @Get('balance/:id/available')
-  async getPaidBalance(@Res() response, @Param('clientId') clientId: string) {
-    try {
-      const findPayableResponse = await this.service.retriveBalanceByStatus(
-        clientId,
-        PayableStatusEnum.paid,
-      );
-
-      if (findPayableResponse.isLeft())
-        return throwError(response, findPayableResponse.value);
-
-      return response.send({
-        message: {},
-        data: findPayableResponse.value,
-      });
-    } catch (error) {
-      return response
-        .status(500)
-        .send({ message: 'internal server error', data: {} });
-    }
-  }
-
-  @Get('balance/:id/waiting-funds')
-  async getWaitingBalance(
-    @Res() response,
-    @Param('clientId') clientId: string,
-  ) {
-    try {
-      const findPayableResponse = await this.service.retriveBalanceByStatus(
-        clientId,
-        PayableStatusEnum.waiting_funds,
-      );
+      const findPayableResponse = await this.service.findByTransaction(id);
 
       if (findPayableResponse.isLeft())
         return throwError(response, findPayableResponse.value);
@@ -148,16 +76,9 @@ export class PayableController {
   }
 
   @Post()
-  async create(@Res() response, @Body() payable: PayableDataDTO) {
+  async create(@Res() response, @Body() payable: CreatePayableDTO) {
     try {
-      if (
-        [
-          payable.value,
-          payable.client,
-          payable.transaction,
-          payable.status,
-        ].every((x) => x === null)
-      )
+      if (isNull(payable))
         return throwError(response, new NullArgumentsError('Empty fields'));
 
       const createPayableResponse = await this.service.create(payable);
@@ -180,17 +101,10 @@ export class PayableController {
   async update(
     @Res() response,
     @Param('id') id: string,
-    @Body() payable: PayableDataDTO,
+    @Body() payable: UpdatePayableDTO,
   ) {
     try {
-      if (
-        [
-          payable.value,
-          payable.client,
-          payable.transaction,
-          payable.status,
-        ].every((x) => x === null)
-      )
+      if (isNull(payable))
         return throwError(response, new NullArgumentsError('Empty fields'));
 
       const updatePayableResponse = await this.service.update(payable, id);

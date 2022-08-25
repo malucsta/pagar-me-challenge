@@ -84,23 +84,36 @@ export class PayableService {
     return right(balance);
   }
 
+  async findByTransaction(
+    transactionId: string,
+  ): Promise<Either<EntityNotFoundError | InvalidArgumentError, PayableData>> {
+    const isValidIdOrError = Id.validate(transactionId);
+    if (isValidIdOrError.isLeft()) return left(isValidIdOrError.value);
+
+    const foundPayable = await this.repository
+      .createQueryBuilder('payable')
+      .select('payable.id', 'id')
+      .where('payable.transaction = :transactionId', { transactionId })
+      .getRawOne();
+
+    if (!foundPayable) return left(new EntityNotFoundError());
+
+    const payableID = Object.values(foundPayable).toString();
+
+    const payable = await this.findById(payableID);
+    if (payable.isLeft()) return left(payable.value);
+
+    return right(payable.value);
+  }
+
   async create(
     payableToCreate: PayableDataDTO,
   ): Promise<Either<InvalidArgumentError, PayableData>> {
     const payableOrError = Payable.create(payableToCreate);
-
     if (payableOrError.isLeft()) return left(payableOrError.value);
 
-    const payable = payableOrError.value;
-
-    const createdPayable = await this.repository.save({
-      id: payable.id.value,
-      value: payable.value.getValue,
-      paymentDate: payable.paymentDate.value,
-      status: payable.status.value,
-      client: payable.client.value,
-      transaction: payable.transaction.value,
-    });
+    const payable = Payable.mapObjectToValues(payableOrError.value);
+    const createdPayable = await this.repository.save(payable);
 
     return right(createdPayable);
   }
@@ -109,30 +122,24 @@ export class PayableService {
     payableToCreate: PayableDataDTO,
     id: string,
   ): Promise<Either<InvalidArgumentError | EntityNotFoundError, PayableData>> {
+    //validates ID
     const isValidIdOrError = Id.validate(id);
     if (isValidIdOrError.isLeft()) return left(isValidIdOrError.value);
 
+    //checks if payable exists
     const existingPayableOrError = await this.findById(id);
     if (existingPayableOrError.isLeft())
       return left(existingPayableOrError.value);
 
+    //return payable structure with updated values
     const payableOrError = Payable.constructValidPayable(
       existingPayableOrError.value,
       payableToCreate,
     );
-
     if (payableOrError.isLeft()) return left(payableOrError.value);
 
-    const payable = payableOrError.value;
-
-    const updatedPayable = await this.repository.save({
-      id: payable.id.value,
-      value: payable.value.getValue,
-      paymentDate: payable.paymentDate.value,
-      status: payable.status.value,
-      client: payable.client.value,
-      transaction: payable.transaction.value,
-    });
+    const payable = Payable.mapObjectToValues(payableOrError.value);
+    const updatedPayable = await this.repository.save(payable);
 
     return right(updatedPayable);
   }

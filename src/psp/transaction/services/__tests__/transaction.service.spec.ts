@@ -6,20 +6,22 @@ import { TransactionService } from '../transaction.service';
 import { ClientService } from '../../../client/services/client.service';
 import { EntityNotFoundError } from '../../../shared/errors/entity-not-found';
 import {
-  clientFoundById,
   createTransactionDTO,
   TransactionResponse,
   findAllResponse,
-  FindByClientIdResponse,
-  findByIdResponse,
+  singleTransaction,
   invalidCreateTransactionDTO,
+  clientFoundById,
+  singlePayable,
 } from './transaction.mock';
 import { InvalidArgumentError } from '../../../shared/errors/invalid-argument';
 import { right, left } from '../../../shared/either';
+import { PayableService } from '../../../payable/services/payable.service';
 
 describe('Transaction Service', () => {
   let transactionService: TransactionService;
   let clientService: ClientService;
+  let payableService: PayableService;
   let repository: Repository<TransactionEntity>;
 
   beforeEach(async () => {
@@ -30,8 +32,9 @@ describe('Transaction Service', () => {
           provide: getRepositoryToken(TransactionEntity),
           useValue: {
             find: jest.fn().mockResolvedValue(findAllResponse),
-            findOne: jest.fn().mockResolvedValue(findByIdResponse),
+            findOne: jest.fn().mockResolvedValue(singleTransaction),
             save: jest.fn().mockResolvedValue(TransactionResponse),
+            remove: jest.fn().mockResolvedValue(singleTransaction),
           },
         },
         {
@@ -40,22 +43,37 @@ describe('Transaction Service', () => {
             findById: jest.fn().mockResolvedValue(right(clientFoundById)),
           },
         },
+        {
+          provide: PayableService,
+          useValue: {
+            create: jest.fn().mockResolvedValue(right(singlePayable)),
+            findByTransaction: jest
+              .fn()
+              .mockResolvedValue(right(singlePayable)),
+            delete: jest.fn().mockResolvedValue(right(singlePayable)),
+          },
+        },
       ],
     }).compile();
 
     transactionService = module.get<TransactionService>(TransactionService);
     clientService = module.get<ClientService>(ClientService);
+    payableService = module.get<PayableService>(PayableService);
     repository = module.get<Repository<TransactionEntity>>(
       getRepositoryToken(TransactionEntity),
     );
+  });
+
+  it('transaction service should be defined', () => {
+    expect(transactionService).toBeDefined();
   });
 
   it('client service should be defined', () => {
     expect(clientService).toBeDefined();
   });
 
-  it('transaction service should be defined', () => {
-    expect(transactionService).toBeDefined();
+  it('payable service should be defined', () => {
+    expect(payableService).toBeDefined();
   });
 
   it('transaction repository should be defined', () => {
@@ -71,7 +89,7 @@ describe('Transaction Service', () => {
       expect(transactions.value).toBe(findAllResponse);
     });
 
-    it('should return left with TransactionNotFoundError if no transaction was found', async () => {
+    it('should return left with EntityNotFoundError if no transaction was found', async () => {
       jest.spyOn(repository, 'find').mockResolvedValue(null);
       const transactions = await transactionService.findAll();
 
@@ -82,13 +100,13 @@ describe('Transaction Service', () => {
   });
 
   describe('FindById', () => {
-    const mockId = findByIdResponse.id;
+    const mockId = singleTransaction.id;
     it('should return right with transaction', async () => {
       const transaction = await transactionService.findById(mockId);
 
       expect(repository.findOne).toBeCalledTimes(1);
       expect(transaction.isRight()).toBe(true);
-      expect(transaction.value).toBe(findByIdResponse);
+      expect(transaction.value).toBe(singleTransaction);
     });
 
     it('should return left InvalidArgumentError if id is invalid', async () => {
@@ -99,43 +117,12 @@ describe('Transaction Service', () => {
       expect(transaction.value).toBeInstanceOf(InvalidArgumentError);
     });
 
-    it('should return left TransactionNotFoundError if transaction does not exist', async () => {
+    it('should return left EntityNotFoundError if transaction does not exist', async () => {
       jest.spyOn(repository, 'findOne').mockResolvedValue(null);
       const transaction = await transactionService.findById(mockId);
 
       expect(transaction.isLeft()).toBe(true);
       expect(transaction.value).toBeInstanceOf(EntityNotFoundError);
-    });
-  });
-
-  describe('FindByClientId', () => {
-    const clientId = createTransactionDTO.client;
-    it('should return right with list of transactions', async () => {
-      jest
-        .spyOn(repository, 'find')
-        .mockResolvedValue([TransactionResponse, TransactionResponse]);
-      const transactions = await transactionService.findByClientId(clientId);
-
-      expect(repository.find).toBeCalledTimes(1);
-      expect(transactions.isRight()).toBe(true);
-      expect(transactions.value).toEqual(FindByClientIdResponse);
-    });
-
-    it('should return left with InvalidArgumentError if id is invalid', async () => {
-      const transactions = await transactionService.findByClientId('123');
-
-      expect(repository.find).toBeCalledTimes(0);
-      expect(transactions.isLeft()).toBe(true);
-      expect(transactions.value).toBeInstanceOf(InvalidArgumentError);
-    });
-
-    it('should return left with TransactionNotFoundError if there are no transactions for the client', async () => {
-      jest.spyOn(repository, 'find').mockReturnValue(null);
-      const transactions = await transactionService.findByClientId(clientId);
-
-      expect(repository.find).toBeCalledTimes(1);
-      expect(transactions.isLeft()).toBe(true);
-      expect(transactions.value).toBeInstanceOf(EntityNotFoundError);
     });
   });
 
@@ -160,7 +147,7 @@ describe('Transaction Service', () => {
       expect(createdTransaction.value).toBeInstanceOf(InvalidArgumentError);
     });
 
-    it('should return left with ClientNotFoundError if client does not exist', async () => {
+    it('should return left with EntityNotFoundError if client does not exist', async () => {
       jest
         .spyOn(clientService, 'findById')
         .mockResolvedValue(
@@ -173,6 +160,61 @@ describe('Transaction Service', () => {
       expect(repository.save).toBeCalledTimes(0);
       expect(createdTransaction.isLeft()).toBe(true);
       expect(createdTransaction.value).toBeInstanceOf(EntityNotFoundError);
+    });
+
+    it('should return left with InvalidArgumentError if payable data is invalid', async () => {
+      jest
+        .spyOn(payableService, 'create')
+        .mockResolvedValue(
+          left(new InvalidArgumentError('Value cannot be zero nor null')),
+        );
+      const createdTransaction = await transactionService.create(
+        createTransactionDTO,
+      );
+
+      expect(repository.save).toBeCalledTimes(1);
+      expect(createdTransaction.isLeft()).toBe(true);
+      expect(createdTransaction.value).toBeInstanceOf(InvalidArgumentError);
+    });
+  });
+
+  describe('Delete', () => {
+    const mockId = singleTransaction.id;
+
+    it('should return right with deleted transaction', async () => {
+      const transactionOrError = await transactionService.delete(mockId);
+
+      expect(repository.remove).toBeCalledTimes(1);
+      expect(transactionOrError.isRight()).toBe(true);
+      expect(transactionOrError.value).toBe(singleTransaction);
+    });
+
+    it('should return left with InvalidArgumentError if id is invalid', async () => {
+      const transactionOrError = await transactionService.delete('123');
+
+      expect(repository.remove).toBeCalledTimes(0);
+      expect(transactionOrError.isLeft()).toBe(true);
+      expect(transactionOrError.value).toBeInstanceOf(InvalidArgumentError);
+    });
+
+    it('should return left with EntityNotFoundError if transaction does not exist', async () => {
+      jest.spyOn(repository, 'findOne').mockResolvedValue(null);
+      const transactionOrError = await transactionService.delete(mockId);
+
+      expect(repository.remove).toBeCalledTimes(0);
+      expect(transactionOrError.isLeft()).toBe(true);
+      expect(transactionOrError.value).toBeInstanceOf(EntityNotFoundError);
+    });
+
+    it('should return left with EntityNotFoundError if corresponding payable does not exist', async () => {
+      jest
+        .spyOn(payableService, 'findByTransaction')
+        .mockResolvedValue(left(new EntityNotFoundError()));
+      const transactionOrError = await transactionService.delete(mockId);
+
+      expect(repository.remove).toBeCalledTimes(0);
+      expect(transactionOrError.isLeft()).toBe(true);
+      expect(transactionOrError.value).toBeInstanceOf(EntityNotFoundError);
     });
   });
 });

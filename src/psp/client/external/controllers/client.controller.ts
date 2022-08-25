@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Post, Put, Res } from '@nestjs/common';
-import { ClientDataDTO } from '../../domain/client-data';
 import { ClientService } from '../../services/client.service';
 import { NullArgumentsError } from '../../../shared/errors/controller-error/null-arguments';
 import { throwError } from '../../../shared/errors/controller-error/throw-error';
+import { isNull } from 'src/psp/shared/helpers/isNull';
+import { CreateClientDTO, UpdateClientDTO } from './client.DTO';
 
 @Controller('client')
 export class ClientController {
@@ -23,16 +24,19 @@ export class ClientController {
   }
 
   @Post()
-  async create(@Res() response, @Body() client: ClientDataDTO) {
+  async create(@Res() response, @Body() client: CreateClientDTO) {
     try {
+      if (isNull(client))
+        throwError(response, new NullArgumentsError('Empty fields'));
+
       const createClientResponse = await this.service.create(client);
 
       if (createClientResponse.isLeft())
         throwError(response, createClientResponse.value);
 
-      response.send({ message: {}, data: createClientResponse.value });
+      return response.send({ message: {}, data: createClientResponse.value });
     } catch (error) {
-      response.status(500).send();
+      return response.status(500).send();
     }
   }
 
@@ -40,12 +44,10 @@ export class ClientController {
   async update(
     @Res() response,
     @Param('id') id: string,
-    @Body() client: ClientDataDTO,
+    @Body() client: UpdateClientDTO,
   ) {
     try {
-      if (
-        [client.account, client.name, client.isActive].every((x) => x === null)
-      )
+      if (isNull(client))
         throwError(response, new NullArgumentsError('Empty fields'));
 
       const updateClientResponse = await this.service.update(id, client);
@@ -53,9 +55,9 @@ export class ClientController {
       if (updateClientResponse.isLeft())
         throwError(response, updateClientResponse.value);
 
-      response.send({ message: {}, data: updateClientResponse.value });
+      return response.send({ message: {}, data: updateClientResponse.value });
     } catch (error) {
-      response.status(500).send();
+      return response.status(500).send();
     }
   }
 }
